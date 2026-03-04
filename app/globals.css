@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply text-slate-900 antialiased;
+  background-color: #f4f2ed;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.18), transparent 32%),
+    radial-gradient(circle at 100% 0%, rgba(100, 116, 139, 0.2), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.9));
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+input,
+select,
+textarea {
+  @apply w-full rounded-xl border border-slate-300/90 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-200;
+}
+
+button {
+  @apply rounded-xl px-4 py-2.5 text-sm font-medium transition;
+}
+
+@layer components {
+  .page-wrap {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .surface-card {
+    @apply rounded-3xl border border-slate-200/90 bg-white/95 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)];
+  }
+
+  .soft-card {
+    @apply rounded-2xl border border-slate-200/90 bg-stone-50/95;
+  }
+
+  .heading-xl {
+    @apply text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-white hover:bg-amber-500;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100;
+  }
+
+  .disclaimer-text {
+    @apply text-xs leading-relaxed text-slate-500;
+  }
+}
+
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-page {
+    max-width: 100% !important;
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+  }
+}
