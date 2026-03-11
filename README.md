@@ -1,4 +1,4 @@
-# CarSage
+![CarSage logo](public/carsage-logo.png)
 
 CarSage is a Next.js MVP that helps car buyers evaluate a listing before purchase. A user enters vehicle details manually or pastes a dealership listing URL, then CarSage generates a report with a Deal Confidence Score, fair-price guidance, negotiation room, and a suggested offer plan.
 
