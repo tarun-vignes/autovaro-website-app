@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import { getStripeClient } from "@/lib/stripe";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { checkoutSchema } from "@/lib/validation";
@@ -8,6 +9,29 @@ export const runtime = "nodejs";
 const isSupabaseConfigured =
   Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
+async function getRequestUser(request: Request) {
+  const authorization = request.headers.get("authorization");
+  const token = authorization?.startsWith("Bearer ") ? authorization.slice(7) : null;
+
+  if (token && process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+    const {
+      data: { user }
+    } = await supabase.auth.getUser(token);
+
+    if (user) {
+      return user;
+    }
+  }
+
+  const supabase = createSupabaseServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  return user;
+}
+
 export async function POST(request: Request) {
   try {
     if (!isSupabaseConfigured) {
@@ -15,9 +39,7 @@ export async function POST(request: Request) {
     }
 
     const supabase = createSupabaseServerClient();
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+    const user = await getRequestUser(request);
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized." }, { status: 401 });

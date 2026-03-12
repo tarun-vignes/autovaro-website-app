@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from "@/lib/supabase-browser";
 import type { PurchaseMethod } from "@/types/report";
 
 const disclaimer =
@@ -80,6 +81,18 @@ export default function CheckPage() {
 
   const currentYear = useMemo(() => new Date().getFullYear(), []);
 
+  async function buildAuthHeaders() {
+    const supabase = createSupabaseBrowserClient();
+    const {
+      data: { session }
+    } = await supabase.auth.getSession();
+
+    return {
+      "Content-Type": "application/json",
+      ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {})
+    };
+  }
+
   async function handleAutoGenerate() {
     setAutoError(null);
 
@@ -130,9 +143,8 @@ export default function CheckPage() {
 
       const quoteResponse = await fetch("/api/quote", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        credentials: "include",
+        headers: await buildAuthHeaders(),
         body: JSON.stringify(quotePayload)
       });
 
@@ -169,9 +181,8 @@ export default function CheckPage() {
 
       const response = await fetch("/api/quote", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        credentials: "include",
+        headers: await buildAuthHeaders(),
         body: JSON.stringify(manualPayload)
       });
 
