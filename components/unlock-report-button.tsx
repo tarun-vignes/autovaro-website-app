@@ -13,6 +13,7 @@ export function UnlockReportButton({ reportId }: { reportId: string }) {
     try {
       const response = await fetch("/api/stripe/checkout", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
