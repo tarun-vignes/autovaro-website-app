@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getStripeClient } from "@/lib/stripe";
+import { createSupabaseAdminClient } from "@/lib/supabase-admin";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { checkoutSchema } from "@/lib/validation";
 
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Supabase is not configured." }, { status: 500 });
     }
 
-    const supabase = createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
     const user = await getRequestUser(request);
 
     if (!user) {
