@@ -156,9 +156,6 @@ export default function CheckPage() {
         method: "POST",
         credentials: "include",
         headers: await buildAuthHeaders(),
-        headers: {
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify(quotePayload)
       });
 
