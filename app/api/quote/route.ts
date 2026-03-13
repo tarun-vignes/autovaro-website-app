@@ -40,11 +40,18 @@ export async function POST(request: Request) {
     const user = await getRequestUser(request);
 
     if (!user) {
-      console.error("Quote auth failed", {
+      const debug = {
         hasAuthorizationHeader: Boolean(request.headers.get("authorization")),
         hasCookieHeader: Boolean(request.headers.get("cookie"))
-      });
-      return NextResponse.json({ error: "You must be signed in to generate a report." }, { status: 401 });
+      };
+      console.error("Quote auth failed", debug);
+      return NextResponse.json(
+        {
+          error: "You must be signed in to generate a report.",
+          debug
+        },
+        { status: 401 }
+      );
     }
 
     const json = await request.json();

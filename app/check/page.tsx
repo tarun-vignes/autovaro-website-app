@@ -163,7 +163,12 @@ export default function CheckPage() {
 
       if (!quoteResponse.ok) {
         if (quoteResponse.status === 401) {
-          router.push("/login?next=/check");
+          const debugText = quoteResult.debug
+            ? ` Auth debug: token=${quoteResult.debug.hasAuthorizationHeader ? "yes" : "no"}, cookie=${
+                quoteResult.debug.hasCookieHeader ? "yes" : "no"
+              }.`
+            : "";
+          setAutoError(`${quoteResult.error ?? "You must be signed in to generate a report."}${debugText}`);
           return;
         }
 
@@ -200,11 +205,17 @@ export default function CheckPage() {
       const payload = await response.json();
 
       if (!response.ok) {
-        setError(payload.error ?? "Unable to generate your report right now.");
-
         if (response.status === 401) {
-          router.push("/login?next=/check");
+          const debugText = payload.debug
+            ? ` Auth debug: token=${payload.debug.hasAuthorizationHeader ? "yes" : "no"}, cookie=${
+                payload.debug.hasCookieHeader ? "yes" : "no"
+              }.`
+            : "";
+          setError(`${payload.error ?? "You must be signed in to generate a report."}${debugText}`);
+          return;
         }
+
+        setError(payload.error ?? "Unable to generate your report right now.");
 
         return;
       }
